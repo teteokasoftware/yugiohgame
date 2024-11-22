@@ -1,0 +1,870 @@
+<html><head><base href="." />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YuGiOh Kart Bilgi Yarışması</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #1a237e, #311b92);
+        color: white;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+
+    .login-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+    }
+
+    .login-form input {
+        padding: 12px;
+        border: none;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .login-form button {
+        padding: 12px;
+        border: none;
+        border-radius: 5px;
+        background: #4CAF50;
+        color: white;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .login-form button:hover {
+        background: #45a049;
+    }
+
+    .logo {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .question-card {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .card-image {
+        width: 200px;
+        height: 300px;
+        margin: 0 auto;
+        display: block;
+        border: 3px solid gold;
+        border-radius: 10px;
+        background: #000;
+        background-size: cover;
+        background-position: center;
+        margin-bottom: 20px;
+    }
+
+    .options {
+        display: grid;
+        gap: 10px;
+    }
+
+    .option-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        padding: 15px;
+        border-radius: 8px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .option-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .score {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .footer {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 14px;
+        opacity: 0.7;
+    }
+
+    .scoreboard {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 20px;
+    }
+
+    .scoreboard h3 {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .scoreboard-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .scoreboard-list li {
+        padding: 8px;
+        margin: 5px 0;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 5px;
+    }
+
+    .profile-container {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        text-align: center;
+    }
+
+    .profile-photo {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 3px solid gold;
+        cursor: pointer;
+        background-size: cover;
+        background-position: center;
+        background-color: #666;
+        margin-bottom: 5px;
+    }
+
+    .profile-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        background: rgba(0, 0, 0, 0.9);
+        padding: 10px;
+        border-radius: 8px;
+        width: 200px;
+        z-index: 1000;
+    }
+
+    .profile-menu.active {
+        display: block;
+    }
+
+    .profile-menu button {
+        width: 100%;
+        padding: 8px;
+        margin: 5px 0;
+        border: none;
+        border-radius: 4px;
+        background: #4CAF50;
+        color: white;
+        cursor: pointer;
+    }
+
+    .profile-menu button:hover {
+        background: #45a049;
+    }
+
+    .profile-menu .score-display {
+        color: white;
+        margin: 10px 0;
+        padding: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+    }
+
+    .profile-menu .username-display {
+        color: white;
+        margin: 10px 0;
+        padding: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
+    #photoInput {
+        display: none;
+    }
+
+    .admin-controls {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+    }
+
+    .question-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .question-form input {
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .questions-list {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .question-item {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 15px;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+    }
+
+    .question-item img {
+        width: 100px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .question-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .edit-btn, .delete-btn {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+    }
+
+    .edit-btn {
+        background: #2196F3;
+    }
+
+    .edit-btn:hover {
+        background: #1976D2;
+    }
+
+    .delete-btn {
+        background: #ff4444;
+    }
+
+    .delete-btn:hover {
+        background: #cc0000;
+    }
+
+    #adminPanel {
+        position: relative;
+    }
+
+    #adminPanel button:hover {
+        background: #45a049;
+    }
+
+    .end-game-display {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .end-game-display h2 {
+        color: #fff;
+        margin-bottom: 15px;
+    }
+
+    .end-game-display p {
+        font-size: 18px;
+        margin: 10px 0;
+    }
+
+    .replay-btn {
+        background: #4CAF50;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: background 0.3s ease;
+    }
+
+    .replay-btn:hover {
+        background: #45a049;
+    }
+</style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <div class="logo">
+            <h1>YuGiOh Kart Yarışması</h1>
+        </div>
+        
+        <div class="profile-container" id="profileContainer" style="display: none;">
+            <div class="profile-photo" id="profilePhoto" onclick="toggleProfileMenu()"></div>
+            <div class="profile-menu" id="profileMenu">
+                <div class="username-display">Kullanıcı: <span id="profileUsername"></span></div>
+                <div class="score-display">Son Skor: <span id="lastScore">0</span></div>
+                <input type="file" id="photoInput" accept="image/*" onchange="changeProfilePhoto(event)">
+                <button onclick="document.getElementById('photoInput').click()">Fotoğraf Değiştir</button>
+                <button onclick="logout()">Çıkış Yap</button>
+            </div>
+        </div>
+
+        <div id="loginScreen">
+            <div class="login-form">
+                <input type="text" id="username" placeholder="Kullanıcı Adı">
+                <input type="password" id="password" placeholder="Şifre">
+                <button onclick="login()">Giriş Yap</button>
+                <button onclick="register()">Kayıt Ol</button>
+            </div>
+        </div>
+
+        <div id="adminLoginScreen" style="display: none;">
+            <div class="login-form">
+                <h2>Admin Girişi</h2>
+                <input type="text" id="adminUsername" placeholder="Admin Kullanıcı Adı">
+                <input type="password" id="adminPassword" placeholder="Admin Şifre">
+                <button onclick="adminLogin()">Admin Girişi</button>
+            </div>
+        </div>
+
+        <div id="gameScreen" style="display: none;">
+            <div class="score">Skor: <span id="score">0</span></div>
+            
+            <div class="question-card">
+                <div id="cardImage" class="card-image"></div>
+                <h2 id="questionText">Bu kart hangi karaktere aittir?</h2>
+                <div class="options" id="options">
+                    <!-- Seçenekler JavaScript ile doldurulacak -->
+                </div>
+            </div>
+
+            <div class="scoreboard">
+                <h3>En Yüksek Skorlar</h3>
+                <ul id="scoreboard-list" class="scoreboard-list">
+                    <!-- Skorlar JavaScript ile doldurulacak -->
+                </ul>
+            </div>
+
+            <div class="footer">
+                © 2024 TeteoKaSoftware
+            </div>
+        </div>
+
+        <div id="adminPanel" style="display: none;">
+            <h2>Admin Paneli</h2>
+            <button onclick="returnToLogin()" style="
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                padding: 8px 15px;
+                background: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;">
+                Giriş Sayfasına Dön
+            </button>
+            <div class="admin-controls">
+                <h3>Yeni Soru Ekle</h3>
+                <div class="question-form">
+                    <input type="text" id="newCardName" placeholder="Kart Adı">
+                    <input type="text" id="newCardOwner" placeholder="Kart Sahibi">
+                    <input type="text" id="option1" placeholder="Seçenek 1">
+                    <input type="text" id="option2" placeholder="Seçenek 2">
+                    <input type="text" id="option3" placeholder="Seçenek 3">
+                    <input type="text" id="option4" placeholder="Seçenek 4">
+                    <input type="file" id="cardImageUpload" accept="image/*">
+                    <button onclick="addNewQuestion()">Soru Ekle</button>
+                </div>
+
+                <h3>Mevcut Sorular</h3>
+                <div id="questionsList" class="questions-list">
+                    <!-- Questions will be listed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+// Kullanıcı yönetimi
+let currentUser = null;
+let score = 0;
+let currentQuestion = 0;
+
+// Admin credentials (in a real application, these should be stored securely)
+const ADMIN_USERNAME = 'admin';
+const ADMIN_PASSWORD = 'teteoka01';
+
+// Soru veritabanı
+const questions = [
+    {
+        card: "Dark Magician",
+        owner: "Yugi Muto",
+        options: ["Yugi Muto", "Seto Kaiba", "Mai Valentine", "Joey Wheeler"],
+        image: "https://example.com/dark-magician.jpg" 
+    },
+    {
+        card: "Blue Eyes White Dragon",
+        owner: "Seto Kaiba",
+        options: ["Yugi Muto", "Seto Kaiba", "Pegasus", "Bakura"],
+        image: "https://example.com/blue-eyes.jpg"
+    },
+    // [Add more questions to reach 15 total]
+];
+
+function login() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    
+    if (username === ADMIN_USERNAME) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('adminLoginScreen').style.display = 'block';
+        return;
+    }
+    
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const user = users.find(u => u.username === username && u.password === password);
+    
+    if (user) {
+        currentUser = username;
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('gameScreen').style.display = 'block';
+        document.getElementById('profileContainer').style.display = 'block';
+        document.getElementById('profileUsername').textContent = username; // Add this line
+
+        // Load profile photo if exists
+        const userProfiles = JSON.parse(localStorage.getItem('userProfiles') || '{}');
+        if (userProfiles[currentUser]) {
+            document.getElementById('profilePhoto').style.backgroundImage = `url(${userProfiles[currentUser]})`;
+        }
+
+        updateLastScore();
+        startGame();
+    } else {
+        alert('Hatalı kullanıcı adı veya şifre!');
+    }
+}
+
+function adminLogin() {
+    const username = document.getElementById('adminUsername').value;
+    const password = document.getElementById('adminPassword').value;
+    
+    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        document.getElementById('adminLoginScreen').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+        loadQuestions();
+    } else {
+        alert('Hatalı admin bilgileri!');
+    }
+}
+
+function register() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    
+    if (!username || !password) {
+        alert('Kullanıcı adı ve şifre gereklidir!');
+        return;
+    }
+
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    if (users.some(u => u.username === username)) {
+        alert('Bu kullanıcı adı zaten kullanımda!');
+        return;
+    }
+
+    users.push({ username, password });
+    localStorage.setItem('users', JSON.stringify(users));
+    alert('Kayıt başarılı! Giriş yapabilirsiniz.');
+}
+
+function startGame() {
+    const savedQuestions = JSON.parse(localStorage.getItem('yugiohQuestions') || '[]');
+    if (savedQuestions.length > 0) {
+        questions.length = 0; // Clear existing questions
+        questions.push(...savedQuestions);
+    }
+    
+    score = 0;
+    currentQuestion = 0;
+    document.getElementById('score').textContent = score;
+    showQuestion();
+    updateScoreboard();
+}
+
+function showQuestion() {
+    if (currentQuestion >= questions.length) {
+        endGame();
+        return;
+    }
+
+    const question = questions[currentQuestion];
+    document.getElementById('cardImage').style.backgroundImage = `url(${question.image})`;
+    document.getElementById('questionText').textContent = `${question.card} kartı hangi karaktere aittir?`;
+
+    const optionsContainer = document.getElementById('options');
+    optionsContainer.innerHTML = '';
+    question.options.forEach(option => {
+        const button = document.createElement('button');
+        button.className = 'option-btn';
+        button.textContent = option;
+        button.onclick = () => checkAnswer(option, question.owner);
+        optionsContainer.appendChild(button);
+    });
+}
+
+function checkAnswer(selected, correct) {
+    if (selected === correct) {
+        score += 100;
+        document.getElementById('score').textContent = score;
+    }
+    currentQuestion++;
+    showQuestion();
+}
+
+function endGame() {
+    updateHighScore();
+    const rank = calculateRank();
+    
+    // Hide question card
+    document.querySelector('.question-card').style.display = 'none';
+    
+    // Create and show end game display
+    const endGameDisplay = document.createElement('div');
+    endGameDisplay.className = 'end-game-display';
+    endGameDisplay.innerHTML = `
+        <h2>Oyun Bitti!</h2>
+        <p>Toplam Skorunuz: ${score}</p>
+        <p>Sıralamanız: ${rank}.</p>
+        <button onclick="restartGame()" class="replay-btn">Tekrar Oyna</button>
+    `;
+    
+    // Insert before the scoreboard
+    const scoreboard = document.querySelector('.scoreboard');
+    scoreboard.parentNode.insertBefore(endGameDisplay, scoreboard);
+    
+    updateLastScore();
+    updateScoreboard();
+}
+
+function calculateRank() {
+    const scores = JSON.parse(localStorage.getItem('yugiohScores') || '[]');
+    scores.sort((a, b) => b.score - a.score);
+    const rank = scores.findIndex(entry => entry.name === currentUser) + 1;
+    return rank;
+}
+
+function restartGame() {
+    // Remove end game display if it exists
+    const endGameDisplay = document.querySelector('.end-game-display');
+    if (endGameDisplay) {
+        endGameDisplay.remove();
+    }
+    
+    // Show question card again
+    document.querySelector('.question-card').style.display = 'block';
+    
+    // Reset and start new game
+    startGame();
+}
+
+function updateHighScore() {
+    const scores = JSON.parse(localStorage.getItem('yugiohScores') || '[]');
+    const userIndex = scores.findIndex(entry => entry.name === currentUser);
+
+    if (userIndex !== -1) {
+        if (scores[userIndex].score < score) {
+            scores[userIndex].score = score;
+        }
+    } else {
+        scores.push({ name: currentUser, score: score });
+    }
+
+    scores.sort((a, b) => b.score - a.score);
+    localStorage.setItem('yugiohScores', JSON.stringify(scores));
+}
+
+function updateScoreboard() {
+    const scores = JSON.parse(localStorage.getItem('yugiohScores') || '[]');
+    const scoreboardList = document.getElementById('scoreboard-list');
+    scoreboardList.innerHTML = '';
+    
+    scores.slice(0, 5).forEach((entry, index) => {
+        const li = document.createElement('li');
+        li.textContent = `${index + 1}. ${entry.name}: ${entry.score}`;
+        scoreboardList.appendChild(li);
+    });
+}
+
+function updateLastScore() {
+    const scores = JSON.parse(localStorage.getItem('yugiohScores') || '[]');
+    const userScoreEntry = scores.find(entry => entry.name === currentUser);
+    document.getElementById('lastScore').textContent = userScoreEntry ? userScoreEntry.score : '0';
+}
+
+function toggleProfileMenu() {
+    const menu = document.getElementById('profileMenu');
+    menu.classList.toggle('active');
+    updateLastScore();
+}
+
+function changeProfilePhoto(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const userProfiles = JSON.parse(localStorage.getItem('userProfiles') || '{}');
+            userProfiles[currentUser] = e.target.result;
+            localStorage.setItem('userProfiles', JSON.stringify(userProfiles));
+            document.getElementById('profilePhoto').style.backgroundImage = `url(${e.target.result})`;
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function logout() {
+    currentUser = null;
+    score = 0;
+    currentQuestion = 0;
+    document.getElementById('gameScreen').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'block';
+    document.getElementById('adminLoginScreen').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'none';
+    document.getElementById('profileContainer').style.display = 'none';
+    document.getElementById('profileMenu').classList.remove('active');
+    document.getElementById('profileUsername').textContent = ''; // Add this line
+}
+
+function addNewQuestion() {
+    try {
+        const cardName = document.getElementById('newCardName').value;
+        const cardOwner = document.getElementById('newCardOwner').value;
+        const options = [
+            document.getElementById('option1').value,
+            document.getElementById('option2').value,
+            document.getElementById('option3').value,
+            document.getElementById('option4').value
+        ];
+        
+        const imageFile = document.getElementById('cardImageUpload').files[0];
+        
+        if (!cardName || !cardOwner || options.some(opt => !opt) || !imageFile) {
+            alert('Hata: Tüm alanları doldurun ve bir resim seçin!');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const newQuestion = {
+                    card: cardName,
+                    owner: cardOwner,
+                    options: options,
+                    image: e.target.result
+                };
+
+                // Get existing questions from localStorage
+                const existingQuestions = JSON.parse(localStorage.getItem('yugiohQuestions') || '[]');
+                existingQuestions.push(newQuestion);
+                localStorage.setItem('yugiohQuestions', JSON.stringify(existingQuestions));
+                
+                // Update questions array
+                questions.push(newQuestion);
+                
+                // Refresh questions list
+                loadQuestions();
+                
+                // Clear form
+                clearQuestionForm();
+                alert('Soru başarıyla eklendi!');
+            } catch (error) {
+                alert('Hata: Soru eklenirken bir sorun oluştu! ' + error.message);
+            }
+        };
+        
+        reader.onerror = function() {
+            alert('Hata: Resim yüklenirken bir sorun oluştu!');
+        };
+        
+        reader.readAsDataURL(imageFile);
+    } catch (error) {
+        alert('Hata: İşlem sırasında bir sorun oluştu! ' + error.message);
+    }
+}
+
+function deleteQuestion(index) {
+    const existingQuestions = JSON.parse(localStorage.getItem('yugiohQuestions') || '[]');
+    existingQuestions.splice(index, 1);
+    localStorage.setItem('yugiohQuestions', JSON.stringify(existingQuestions));
+    questions.splice(index, 1);
+    loadQuestions();
+}
+
+function loadQuestions() {
+    const questionsList = document.getElementById('questionsList');
+    questionsList.innerHTML = '';
+    
+    // Get questions from localStorage
+    const savedQuestions = JSON.parse(localStorage.getItem('yugiohQuestions') || '[]');
+    
+    // Update the questions array with saved questions
+    questions.length = 0;
+    questions.push(...savedQuestions);
+    
+    savedQuestions.forEach((question, index) => {
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'question-item';
+        questionDiv.innerHTML = `
+            <img src="${question.image}" alt="${question.card}">
+            <div>
+                <h4>${question.card}</h4>
+                <p>Sahibi: ${question.owner}</p>
+            </div>
+            <div class="question-actions">
+                <button onclick="editQuestion(${index})" class="edit-btn">Düzenle</button>
+                <button onclick="deleteQuestion(${index})" class="delete-btn">Sil</button>
+            </div>
+        `;
+        questionsList.appendChild(questionDiv);
+    });
+}
+
+function clearQuestionForm() {
+    document.getElementById('newCardName').value = '';
+    document.getElementById('newCardOwner').value = '';
+    document.getElementById('option1').value = '';
+    document.getElementById('option2').value = '';
+    document.getElementById('option3').value = '';
+    document.getElementById('option4').value = '';
+    document.getElementById('cardImageUpload').value = '';
+}
+
+function editQuestion(index) {
+    const question = questions[index];
+    
+    // Fill the form with existing question data
+    document.getElementById('newCardName').value = question.card;
+    document.getElementById('newCardOwner').value = question.owner;
+    document.getElementById('option1').value = question.options[0];
+    document.getElementById('option2').value = question.options[1];
+    document.getElementById('option3').value = question.options[2];
+    document.getElementById('option4').value = question.options[3];
+    
+    // Add a hidden input to track which question is being edited
+    const editIndexInput = document.createElement('input');
+    editIndexInput.type = 'hidden';
+    editIndexInput.id = 'editQuestionIndex';
+    editIndexInput.value = index;
+    document.querySelector('.question-form').appendChild(editIndexInput);
+    
+    // Change the "Soru Ekle" button text
+    const addButton = document.querySelector('.question-form button');
+    addButton.textContent = 'Soruyu Güncelle';
+    addButton.onclick = () => updateQuestion();
+}
+
+function updateQuestion() {
+    const index = parseInt(document.getElementById('editQuestionIndex').value);
+    const cardName = document.getElementById('newCardName').value;
+    const cardOwner = document.getElementById('newCardOwner').value;
+    const options = [
+        document.getElementById('option1').value,
+        document.getElementById('option2').value,
+        document.getElementById('option3').value,
+        document.getElementById('option4').value
+    ];
+    
+    const imageFile = document.getElementById('cardImageUpload').files[0];
+    
+    if (!cardName || !cardOwner || options.some(opt => !opt)) {
+        alert('Hata: Lütfen tüm alanları doldurun!');
+        return;
+    }
+
+    const updateQuestionData = (imageData) => {
+        try {
+            // Get existing questions from localStorage
+            const existingQuestions = JSON.parse(localStorage.getItem('yugiohQuestions') || '[]');
+            
+            const updatedQuestion = {
+                card: cardName,
+                owner: cardOwner,
+                options: options,
+                image: imageData || existingQuestions[index].image // Use existing image if no new one
+            };
+
+            // Update the question in the array
+            existingQuestions[index] = updatedQuestion;
+            
+            // Save back to localStorage
+            localStorage.setItem('yugiohQuestions', JSON.stringify(existingQuestions));
+            
+            // Update the questions array
+            questions[index] = updatedQuestion;
+            
+            // Reset form and button
+            clearQuestionForm();
+            const addButton = document.querySelector('.question-form button');
+            addButton.textContent = 'Soru Ekle';
+            addButton.onclick = addNewQuestion;
+            
+            // Remove edit index input
+            const editIndexInput = document.getElementById('editQuestionIndex');
+            if (editIndexInput) editIndexInput.remove();
+            
+            loadQuestions();
+            alert('Soru başarıyla güncellendi!');
+        } catch (error) {
+            alert('Hata: Soru güncellenirken bir sorun oluştu! ' + error.message);
+        }
+    };
+
+    if (imageFile) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            updateQuestionData(e.target.result);
+        };
+        reader.onerror = function() {
+            alert('Hata: Resim yüklenirken bir sorun oluştu!');
+        };
+        reader.readAsDataURL(imageFile);
+    } else {
+        updateQuestionData();
+    }
+}
+
+function returnToLogin() {
+    document.getElementById('adminPanel').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'block';
+    document.getElementById('adminUsername').value = '';
+    document.getElementById('adminPassword').value = '';
+}
+</script>
+</body>
+</html>
